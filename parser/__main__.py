@@ -24,7 +24,7 @@ def parse_button(text):
 		while to_check > 0 and markdown_note[to_check] == "\\":
 			n_escapes += 1
 			to_check -= 1
- 
+
 		# if even, not escaped -> create button
 		if n_escapes % 2 == 0:
 			# create a thruple with button label, url, and newline status
@@ -63,18 +63,18 @@ async def edit(client, message):
 		button = build_keyboard(button)
 		if button:
 			button = InlineKeyboardMarkup(button)
+			await message.edit(text=text, reply_markup=button)
 		else:
-			button = None
-		await message.edit(text=text, reply_markup=button)
+			return
 
 	elif message.photo or message.video:
 		text, button = parse_button(message.caption)
 		button = build_keyboard(button)
 		if button:
 			button = InlineKeyboardMarkup(button)
+			await message.edit_caption(caption=text, reply_markup=button)
 		else:
-			button = None
-		await message.edit_caption(caption=text, reply_markup=button)
+			return
 	else:
 		return
 
