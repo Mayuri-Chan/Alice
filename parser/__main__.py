@@ -6,7 +6,6 @@ from parser import client
 from pyrogram import filters, idle
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-
 BTN_URL_REGEX = re.compile(r"(\[([^\[]+?)\]\(buttonurl:(?:/{0,2})(.+?)(:same)?\))")
 
 client.start()
@@ -59,22 +58,32 @@ async def edit(client, message):
 	if message.reply_markup:
 		return
 	if message.text:
-		text, button = parse_button(message.text)
+		with open('temp.txt', 'w') as f:
+			f.write(message.text)
+		file = open('temp.txt', 'r')
+		msg = file.read()
+		text, button = parse_button(msg)
 		button = build_keyboard(button)
 		if button:
 			button = InlineKeyboardMarkup(button)
 			await message.edit(text=text, reply_markup=button)
 		else:
 			return
+		os.remove(os.path.join(os.getcwd(), 'temp.txt'))
 
-	elif message.photo or message.video:
-		text, button = parse_button(message.caption)
+	elif message.caption: # message.photo or message.video or message.animation:
+		with open('temp.txt', 'w') as f:
+			f.write(message.caption)
+		file = open('temp.txt', 'r')
+		msg = file.read()
+		text, button = parse_button(msg)
 		button = build_keyboard(button)
 		if button:
 			button = InlineKeyboardMarkup(button)
 			await message.edit_caption(caption=text, reply_markup=button)
 		else:
 			return
+		os.remove(os.path.join(os.getcwd(), 'temp.txt'))
 	else:
 		return
 
