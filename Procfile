@@ -1,1 +1,1 @@
-worker: python3 -m parser
+worker: python3 -m alice

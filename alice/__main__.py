@@ -2,7 +2,7 @@ import asyncio
 import os
 import re
 
-from parser import client
+from alice import client
 from pyrogram import filters, idle
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
