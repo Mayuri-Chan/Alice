@@ -1,7 +1,7 @@
-![Mayuri](https://static.wikia.nocookie.net/date-a-live/images/7/77/1chara_mayuri.png/revision/latest)
-\[WIP\] Modular Telegram Bot based on Pyrogram 
+![Alice](https://raw.githubusercontent.com/Mayuri-Chan/Alice/master/img/alice.jpg)  
+Telegram Channel Button Parser Bot based on Pyrogram 
 ==============
-You can found this bot on telegram [here](https://t.me/Mayuri17Bot)  
+You can found this bot on telegram [here](https://t.me/Alice17_bot)  
   
 ## Thanks To
 
