@@ -1,11 +1,18 @@
 from importlib import import_module
-from alice.config import Config
 
-config = Config()
-API_ID = config.API_ID
-API_HASH = config.API_HASH
-BOT_SESSION = config.BOT_SESSION
-WORKERS = config.WORKERS
+ENV = os.environ.get("ENV", False)
+if ENV:
+	API_ID = os.environ.get("API_ID", None)
+	API_HASH = os.environ.get("API_HASH", None)
+	BOT_SESSION = os.environ.get("BOT_SESSION", None)
+	WORKERS = int(os.environ.get("WORKERS", 6))
+else:
+	from alice.config import Config
+	config = Config()
+	API_ID = config.API_ID
+	API_HASH = config.API_HASH
+	BOT_SESSION = config.BOT_SESSION
+	WORKERS = config.WORKERS
 
 HELP_COMMANDS = {}
 
