@@ -25,5 +25,9 @@ example:
   [Button 3 line 3](btn:https://example6.com:same)`
 
 if you want to preview before posting your message just send the message here and then reply with `/preview`
+
+For channel forwarder. Your group must be a forum (Topics enabled).
+1. send `/settopics` to your channel
+2. forward the `/settopics` message from your channel to your desired topics in your group.
 	"""
 	await m.reply_text(text)
