@@ -5,7 +5,7 @@ from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 BTN_URL_REGEX = re.compile(r"(\[([^\[]+?)\]\(btn:(?:/{0,2})(.+?)(:same)?\))")
 
 def parse_button(text):
-	markdown_note = text
+	markdown_note = text.replace("buttonurl","btn")
 	prev = 0
 	note_data = ""
 	buttons = []

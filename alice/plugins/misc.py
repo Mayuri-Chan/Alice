@@ -4,11 +4,10 @@ from pyrogram import filters
 @Alice.on_message(filters.private & filters.command("start"))
 async def preview(c,m):
 	text = "Hello!\nuse /help for usage."
-	await m.reply_text(text)
+	await m.reply_text(text=text)
 
 @Alice.on_message(filters.private & filters.command("help"))
 async def help(c,m):
-	print(await c.export_session_string())
 	text = """
 To use this bot just add the bot as Admin to your channel.
 then when you post something use markdown below for creating button:
@@ -30,4 +29,4 @@ For channel forwarder. Your group must be a forum (Topics enabled).
 1. send `/settopics` to your channel
 2. forward the `/settopics` message from your channel to your desired topics in your group.
 	"""
-	await m.reply_text(text)
+	await m.reply_text(text=text)
