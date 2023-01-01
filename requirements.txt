@@ -1,4 +1,4 @@
 psycopg2-binary
-git+https://github.com/wulan17/pyrogram@dev/topics
+git+https://github.com/Mayuri-Chan/pyrogram@dev/pyrofork
 sqlalchemy
 tgcrypto
