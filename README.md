@@ -7,3 +7,4 @@ You can found this bot on telegram [here](https://t.me/nanjou17bot)
 
 • [Pyrogram](https://github.com/pyrogram)  
 • [Ayra Hikari](https://github.com/AyraHikari)  
+• [Joakim Hellsén](https://github.com/TheLovinator1)  
