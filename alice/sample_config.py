@@ -5,3 +5,5 @@ class Config(object):
 	DATABASE_URL = "postgresql://user:pass@localhost:port/db"
 	PREFIX = ['/','$']
 	WORKERS = 6
+	GAME_CHAT = "-1001234"
+	TZ = "Asia/Jakarta"

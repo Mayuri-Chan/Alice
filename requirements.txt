@@ -1,4 +1,7 @@
 psycopg2-binary
+pytz
 git+https://github.com/Mayuri-Chan/pyrogram@dev/pyrofork
+git+https://github.com/agronholm/apscheduler@master
+requests
 sqlalchemy
 tgcrypto

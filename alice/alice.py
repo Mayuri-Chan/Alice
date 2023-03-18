@@ -1,7 +1,12 @@
 import ast
 from alice import API_ID, API_HASH, BOT_SESSION, WORKERS, init_help
 from alice.db import bot_settings as sql
+from alice.games.epicgames import get_free_epic_games
+from alice.games.steam import get_free_steam_games
 from alice.plugins import list_all_plugins
+from apscheduler import RunState
+from apscheduler.schedulers.async_ import AsyncScheduler
+from apscheduler.triggers.interval import IntervalTrigger
 from pyrogram import Client, raw
 
 class Alice(Client):
@@ -19,9 +24,24 @@ class Alice(Client):
 			sleep_threshold=180
 		)
 
+	async def start_scheduler(self):
+		self.scheduler = AsyncScheduler()
+		await self.scheduler.__aenter__()
+		if self.scheduler.state == RunState.stopped:
+			await self.scheduler.add_schedule(self.epicgames, IntervalTrigger(seconds=21600))
+			await self.scheduler.add_schedule(self.steam, IntervalTrigger(seconds=21600))
+			await self.scheduler.start_in_background()
+
+	async def epicgames(self):
+		await get_free_epic_games(self)
+
+	async def steam(self):
+		await get_free_steam_games(self)
+
 	async def start(self):
 		await super().start()
 		await self.catch_up()
+		await self.start_scheduler()
 		await init_help(list_all_plugins())
 		print("---[Alice Services is Running...]---")
 

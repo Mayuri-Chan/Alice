@@ -14,6 +14,8 @@ if ENV:
 	DATABASE_URL = os.environ.get("DATABASE_URL", None)
 	PREFIX = os.environ.get("BOT_SESSION", ['/','$'])
 	WORKERS = int(os.environ.get("WORKERS", 6))
+	GAME_CHAT = os.environ.get("GAME_CHAT", None)
+	TZ = os.environ.get("GAME_CHAT", "Asia/Jakarta")
 else:
 	from alice.config import Config
 	config = Config()
@@ -23,6 +25,8 @@ else:
 	DATABASE_URL = config.DATABASE_URL
 	PREFIX = config.PREFIX
 	WORKERS = config.WORKERS
+	GAME_CHAT = config.GAME_CHAT
+	TZ = config.TZ
 
 DB_AVAILABLE = False
 
