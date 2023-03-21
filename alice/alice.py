@@ -2,6 +2,7 @@ import ast
 from alice import API_ID, API_HASH, BOT_SESSION, WORKERS, init_help
 from alice.db import bot_settings as sql
 from alice.games.epicgames import get_free_epic_games
+from alice.games.gog import get_free_gog_games
 from alice.games.steam import get_free_steam_games
 from alice.plugins import list_all_plugins
 from apscheduler import RunState
@@ -29,11 +30,15 @@ class Alice(Client):
 		await self.scheduler.__aenter__()
 		if self.scheduler.state == RunState.stopped:
 			await self.scheduler.add_schedule(self.epicgames, IntervalTrigger(seconds=21600))
+			await self.scheduler.add_schedule(self.gog, IntervalTrigger(seconds=21600))
 			await self.scheduler.add_schedule(self.steam, IntervalTrigger(seconds=21600))
 			await self.scheduler.start_in_background()
 
 	async def epicgames(self):
 		await get_free_epic_games(self)
+
+	async def gog(self):
+		await get_free_gog_games(self)
 
 	async def steam(self):
 		await get_free_steam_games(self)
