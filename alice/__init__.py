@@ -15,7 +15,7 @@ if ENV:
 	PREFIX = os.environ.get("BOT_SESSION", ['/','$'])
 	WORKERS = int(os.environ.get("WORKERS", 6))
 	GAME_CHAT = os.environ.get("GAME_CHAT", None)
-	TZ = os.environ.get("GAME_CHAT", "Asia/Jakarta")
+	TZ = os.environ.get("TZ", "Asia/Jakarta")
 else:
 	from alice.config import Config
 	config = Config()
