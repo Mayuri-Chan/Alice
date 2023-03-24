@@ -26,8 +26,12 @@ async def get_free_steam_games(client):
 		soup2 = bs4.BeautifulSoup(request2.text, "html.parser")
 		original_price = soup2.select_one(".discount_original_price").get_text()
 		discount_price = soup2.select_one(".discount_final_price").get_text()
-		text = soup2.select_one(".game_area_description").get_text("\n")
-		desc = re.search(r'(About This)(\s){0,}(Game|Content)(\s){0,}([A-Za-z0-9\.\!\?].*)', text).group(5)
+		text = soup2.find_all('div',{'class': "game_area_description"})
+		desc = 'No description available'
+		for t in text:
+			f = re.search(r'(About This)(\s){0,}(Game|Content)(\s){0,}([A-Za-z0-9\.\!\?\n].*\n.*)', t.get_text('\n'))
+			if f:
+				desc = f.group(5)
 		text = soup2.select_one(".game_purchase_discount_quantity").get_text()
 		exp = re.search(r'(before\s)([A-Za-z0-9\@\:\s]{0,})', text).group(2)
 		text = soup2.select_one(".game_area_purchase").get_text()
