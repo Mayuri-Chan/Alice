@@ -1,7 +1,6 @@
 import os
 
 from alice.alice import Alice
-from alice.db import setting as sql
 from alice.plugins.forward import forward_m
 from alice.utils.string import build_keyboard, parse_button
 from pyrogram import enums, filters
@@ -9,10 +8,11 @@ from pyrogram.types import InlineKeyboardMarkup
 
 @Alice.on_message(filters.channel, group=1)
 async def channel_watcher(c,m):
+	db = c.db['topics_list']
 	chat_id = m.chat.id
 	forward = False
 	mess = m
-	check = sql.check_channel(chat_id)
+	check = db.find_one({'chat_id': chat_id})
 	if check:
 		forward = True
 	if m.text:
@@ -50,7 +50,7 @@ async def channel_watcher(c,m):
 				await m.edit_caption(caption=text, parse_mode=enums.ParseMode.HTML, reply_markup=button)
 	if forward:
 		try:
-			await mess.forward(chat_id=check.chat_id,message_thread_id=check.thread_id)
+			await mess.forward(chat_id=check['chat_id'],message_thread_id=check['thread_id'])
 		except Exception as e:
 			await forward_m(c,mess)
 	if os.path.isfile(os.path.join(os.getcwd(), 'temp.txt')):

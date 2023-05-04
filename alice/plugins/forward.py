@@ -1,6 +1,5 @@
 import os
 
-from alice.db import setting as sql
 from alice.alice import Alice
 from alice.utils.string import build_keyboard, parse_button
 from pyrogram import enums, filters
@@ -8,6 +7,7 @@ from pyrogram.types import InlineKeyboardMarkup
 
 @Alice.on_message(filters.group & filters.command("settopics"))
 async def set_topics(c,m):
+	db = c.db['topics_list']
 	chat_id = m.chat.id
 	if not m.chat.is_forum:
 		return await m.reply_text("This group is not a forum!")
@@ -15,16 +15,20 @@ async def set_topics(c,m):
 	if not m.forward_from_chat:
 		return await m.reply_text("Please send /settopics to Update channel then forward it here!")
 	channel_id = m.forward_from_chat.id
-	sql.add(channel_id,chat_id,thread_id)
+	if not db.find_one({'channel_id': channel_id}):
+		db.insert_one({'channel_id': channel_id, 'chat_id': chat_id, 'thread_id': thread_id})
+	else:
+		db.update_one({'channel_id': channel_id}, {"$set": {'chat_id': chat_id, 'thread_id': thread_id}})
 	await m.reply_text("Channel Connected")
 
 async def forward_m(c,m):
+	db = c.db['topics_list']
 	button = None
 	channel_id = m.chat.id
-	check = sql.check_channel(channel_id)
+	check = db.find_one({'channel_id': channel_id})
 	if check:
-		chat_id = check.chat_id
-		thread_id = check.thread_id
+		chat_id = check['chat_id']
+		thread_id = check['thread_id']
 		caption = ""
 		button = None
 		text = None

@@ -1,17 +1,11 @@
-import ast
-from alice.db import bot_settings as sql
 from alice.alice import Alice
 from pyrogram import raw
 
 @Alice.on_raw_update()
 async def _raw(c,u,_,__):
-	state = sql.get_settings("state")
-	if not state:
-		state = await c.invoke(raw.functions.updates.GetState())
-		value = {"pts": state.pts, "qts": state.qts, "date": state.date}
-		sql.update_settings("state", str(value))
-		return
-	value = ast.literal_eval(state.value)
+	db = c.db['bot_settings']
+	state = db.find_one({'name': 'state'})
+	value = state['value']
 	pts = value["pts"]
 	date = value["date"]
 	qts = value["qts"]
@@ -27,4 +21,4 @@ async def _raw(c,u,_,__):
 	if not new_pts and not new_date and not new_qts:
 		return
 	value = {'pts': new_pts or pts, 'qts': new_qts or qts, 'date': new_date or date}
-	sql.update_settings("state",str(value))
+	db.update_one({'name': 'state'}, {"$set": {'value': value}})

@@ -1,8 +1,7 @@
 import re
-from alice import GAME_CHAT
-from alice.db import gog as sql
 
 import requests
+from alice import GAME_CHAT
 from bs4 import BeautifulSoup
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -29,6 +28,7 @@ def get_game_description(game_url: str) -> str:
 	return desc.find("b")
 
 async def get_free_gog_games(client):
+	db = client.db['freegames']
 	request = requests.get("https://www.gog.com/")
 	soup = BeautifulSoup(request.text, "html.parser")
 	giveaway = soup.find("a", {"id": "giveaway"})
@@ -40,8 +40,8 @@ async def get_free_gog_games(client):
 	# Game name
 	banner_title = giveaway.find("span", class_="giveaway-banner__title")
 	game_name = get_game_name(banner_title.text)
-	check = sql.check_gog(game_name)
-	if check:
+	all_games = db.find_one({'name': 'gog'})['game_name']
+	if game_name in all_games:
 		return
 
 	# Game URL
@@ -73,4 +73,4 @@ async def get_free_gog_games(client):
 		]
 	)
 	await client.send_photo(chat_id=GAME_CHAT, photo=image_url, caption=text, reply_markup=button)
-	sql.add(game_name)
+	db.update_one({'name': 'gog'},{"$push": {'game_name': game_name}})

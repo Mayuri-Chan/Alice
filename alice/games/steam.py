@@ -1,29 +1,31 @@
 import re
 import os
-from alice import GAME_CHAT
-from alice.db import steam as sql
+from pathlib import Path
 
 import bs4
 import requests
+from alice import GAME_CHAT
+from bs4 import BeautifulSoup
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0"
 STEAM_URL = "https://store.steampowered.com/search/?maxprice=free&specials=1"
 
 async def get_free_steam_games(client):
+	db = client.db['freegames']
 	request = requests.get(STEAM_URL)
-	soup = bs4.BeautifulSoup(request.text, "html.parser")
+	soup = BeautifulSoup(request.text, "html.parser")
 
 	games = soup.find_all("a", class_="search_result_row")
 	for game in games:
 		game_name: str = await get_game_name(game)
-		check = sql.check_steam(game_name)
-		if check:
+		all_games = db.find_one({'name': 'steam'})['game_name']
+		if game_name in all_games:
 			continue
 		game_url: str = await get_game_url(game)
 		image_url: str = await get_game_image(game)
 		request2 = requests.get(game_url)
-		soup2 = bs4.BeautifulSoup(request2.text, "html.parser")
+		soup2 = BeautifulSoup(request2.text, "html.parser")
 		original_price = soup2.select_one(".discount_original_price").get_text()
 		discount_price = soup2.select_one(".discount_final_price").get_text()
 		text = soup2.find_all('div',{'class': "game_area_description"})
@@ -53,7 +55,7 @@ async def get_free_steam_games(client):
 			]
 		)
 		await client.send_photo(chat_id=GAME_CHAT, photo=image_url, caption=text, reply_markup=button)
-		sql.add(game_name)
+		db.update_one({'name': 'steam'},{"$push": {'game_name': game_name}})
 
 async def get_game_image(game):
 	"""
@@ -91,3 +93,4 @@ async def get_game_name(game):
 	game_name_class: bs4.element.Tag = game.find("span", class_="title")
 	game_name = game_name_class.text
 	return game_name
+
