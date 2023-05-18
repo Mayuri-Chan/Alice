@@ -1,5 +1,5 @@
-pymongo
-pyrofork
+pymongo==4.3.3
+pyrofork==2.1.8
 git+https://github.com/agronholm/apscheduler@master
-requests
-tgcrypto
+requests==2.30.0
+tgcrypto==1.2.5
