@@ -1,5 +1,5 @@
 import pymongo
-from alice import API_ID, API_HASH, BOT_SESSION, WORKERS, init_help
+from alice import API_ID, API_HASH, BOT_TOKEN, WORKERS, init_help
 from alice.games.epicgames import get_free_epic_games
 from alice.games.gog import get_free_gog_games
 from alice.games.steam import get_free_steam_games
@@ -14,9 +14,10 @@ class Alice(Client):
 		name = self.__class__.__name__.lower()
 		super().__init__(
 			name,
-			session_string=BOT_SESSION,
 			api_id=API_ID,
-			api_hash= API_HASH,
+			api_hash=API_HASH,
+			bot_token=BOT_TOKEN,
+			mongodb=dict(uri=DATABASE_URL, db_name="alice_sessions"),
 			workers=WORKERS,
 			plugins=dict(
 				root=f"{name}.plugins"
