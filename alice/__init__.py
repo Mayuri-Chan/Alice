@@ -7,6 +7,9 @@ if ENV:
 	API_HASH = os.environ.get("API_HASH", None)
 	BOT_TOKEN = os.environ.get("BOT_TOKEN", None)
 	DATABASE_URL = os.environ.get("DATABASE_URL", None)
+	SESSION_NAME = os.environ.get("SESSION_NAME", None)
+	AUTO_BACKUP = os.environ.get("AUTO_BACKUP", False)
+	BACKUP_CHAT = os.environ.get("BACKUP_CHAT", None)
 	PREFIX = os.environ.get("PREFIX", ['/','$'])
 	WORKERS = int(os.environ.get("WORKERS", 6))
 	GAME_CHAT = os.environ.get("GAME_CHAT", None)
@@ -17,6 +20,9 @@ else:
 	API_HASH = config.API_HASH
 	BOT_TOKEN = config.BOT_TOKEN
 	DATABASE_URL = config.DATABASE_URL
+	SESSION_NAME = config.SESSION_NAME
+	AUTO_BACKUP = config.AUTO_BACKUP
+	BACKUP_CHAT = config.BACKUP_CHAT
 	PREFIX = config.PREFIX
 	WORKERS = config.WORKERS
 	GAME_CHAT = config.GAME_CHAT

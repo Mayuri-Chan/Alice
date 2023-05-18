@@ -1,9 +1,10 @@
 import pymongo
-from alice import API_ID, API_HASH, BOT_TOKEN, WORKERS, init_help
+from alice import API_ID, API_HASH, AUTO_BACKUP, BOT_TOKEN, SESSION_NAME, WORKERS, init_help
 from alice.games.epicgames import get_free_epic_games
 from alice.games.gog import get_free_gog_games
 from alice.games.steam import get_free_steam_games
 from alice.plugins import list_all_plugins
+from alice.utils.backup import backup
 from apscheduler import RunState
 from apscheduler.schedulers.async_ import AsyncScheduler
 from apscheduler.triggers.interval import IntervalTrigger
@@ -17,7 +18,7 @@ class Alice(Client):
 			api_id=API_ID,
 			api_hash=API_HASH,
 			bot_token=BOT_TOKEN,
-			mongodb=dict(uri=DATABASE_URL, db_name="alice_sessions"),
+			mongodb=dict(uri=DATABASE_URL, db_name=SESSION_NAME),
 			workers=WORKERS,
 			plugins=dict(
 				root=f"{name}.plugins"
@@ -29,6 +30,8 @@ class Alice(Client):
 		self.scheduler = AsyncScheduler()
 		await self.scheduler.__aenter__()
 		if self.scheduler.state == RunState.stopped:
+			if AUTO_BACKUP:
+				await self.scheduler.add_schedule(self.backup_now, IntervalTrigger(seconds=60*60*6))
 			await self.scheduler.add_schedule(self.freegames, IntervalTrigger(seconds=21600))
 			await self.scheduler.start_in_background()
 
@@ -107,3 +110,6 @@ class Alice(Client):
 				self.dispatcher.updates_queue.put_nowait((update, users, chats))
 			if isinstance(diff, raw.types.updates.Difference):
 				break
+
+	async def backup_now(self):
+		await backup(self)
