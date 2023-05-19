@@ -12,7 +12,7 @@ async def channel_watcher(c,m):
 	chat_id = m.chat.id
 	forward = False
 	mess = m
-	check = db.find_one({'channel_id': chat_id})
+	check = await db.find_one({'channel_id': chat_id})
 	if check:
 		forward = True
 	if m.text:

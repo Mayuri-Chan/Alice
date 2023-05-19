@@ -4,7 +4,7 @@ from pyrogram import raw
 @Alice.on_raw_update()
 async def _raw(c,u,_,__):
 	db = c.db['bot_settings']
-	state = db.find_one({'name': 'state'})
+	state = await db.find_one({'name': 'state'})
 	value = state['value']
 	pts = value["pts"]
 	date = value["date"]
@@ -21,4 +21,4 @@ async def _raw(c,u,_,__):
 	if not new_pts and not new_date and not new_qts:
 		return
 	value = {'pts': new_pts or pts, 'qts': new_qts or qts, 'date': new_date or date}
-	db.update_one({'name': 'state'}, {"$set": {'value': value}})
+	await db.update_one({'name': 'state'}, {"$set": {'value': value}})

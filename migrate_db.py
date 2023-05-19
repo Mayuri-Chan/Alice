@@ -1,4 +1,5 @@
-import pymongo
+import asyncio
+from async_pymongo import AsyncClient
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import create_engine
@@ -6,13 +7,13 @@ from sqlalchemy import create_engine
 POSTGRES_URL = "postgresql://user:pass@localhost:port/db"
 MONGO_URL = "mongodb://user:pass@localhost:port"
 
-def migrate():
+async def migrate():
 	BASE = automap_base()
 	engine = create_engine(POSTGRES_URL, client_encoding="utf8")
 	BASE.prepare(engine, reflect=True)
 	SESSION = scoped_session(sessionmaker(bind=engine, autoflush=False))
 	tables = BASE.metadata.tables.keys()
-	db = pymongo.MongoClient(MONGO_URL)['alice']
+	db = AsyncClient(MONGO_URL)['alice']
 	epicgames = []
 	gog = []
 	steam = []
@@ -30,10 +31,10 @@ def migrate():
 				gog.append(d.game_id)
 			if table == 'steam_list':
 				steam.append(d.name)
-	db.freegames.insert_many([
+	await db.freegames.insert_many([
 		{'name': 'epicgames', 'game_id': epicgames},
 		{'name': 'gog', 'game_name': gog},
 		{'name': 'steam', 'game_name': steam}
 	])
 
-migrate()
+asyncio.run(migrate())

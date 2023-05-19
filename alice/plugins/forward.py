@@ -15,17 +15,17 @@ async def set_topics(c,m):
 	if not m.forward_from_chat:
 		return await m.reply_text("Please send /settopics to Update channel then forward it here!")
 	channel_id = m.forward_from_chat.id
-	if not db.find_one({'channel_id': channel_id}):
-		db.insert_one({'channel_id': channel_id, 'chat_id': chat_id, 'thread_id': thread_id})
+	if not await db.find_one({'channel_id': channel_id}):
+		await db.insert_one({'channel_id': channel_id, 'chat_id': chat_id, 'thread_id': thread_id})
 	else:
-		db.update_one({'channel_id': channel_id}, {"$set": {'chat_id': chat_id, 'thread_id': thread_id}})
+		await db.update_one({'channel_id': channel_id}, {"$set": {'chat_id': chat_id, 'thread_id': thread_id}})
 	await m.reply_text("Channel Connected")
 
 async def forward_m(c,m):
 	db = c.db['topics_list']
 	button = None
 	channel_id = m.chat.id
-	check = db.find_one({'channel_id': channel_id})
+	check = await db.find_one({'channel_id': channel_id})
 	if check:
 		chat_id = check['chat_id']
 		thread_id = check['thread_id']

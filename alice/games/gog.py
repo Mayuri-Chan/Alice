@@ -40,7 +40,7 @@ async def get_free_gog_games(client):
 	# Game name
 	banner_title = giveaway.find("span", class_="giveaway-banner__title")
 	game_name = get_game_name(banner_title.text)
-	all_games = db.find_one({'name': 'gog'})['game_name']
+	all_games = (await db.find_one({'name': 'gog'}))['game_name']
 	if game_name in all_games:
 		return
 
@@ -73,4 +73,4 @@ async def get_free_gog_games(client):
 		]
 	)
 	await client.send_photo(chat_id=GAME_CHAT, photo=image_url, caption=text, reply_markup=button)
-	db.update_one({'name': 'gog'},{"$push": {'game_name': game_name}})
+	await db.update_one({'name': 'gog'},{"$push": {'game_name': game_name}})

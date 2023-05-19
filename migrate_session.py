@@ -1,6 +1,6 @@
 import aiosqlite
 import asyncio
-import pymongo
+from async_pymongo import AsyncClient
 
 mongodb_uri = "mongodb://127.0.0.1"
 mongodb_dbname = "my_sessions"
@@ -8,7 +8,7 @@ sqlite_file_path = "/path/to/my_bot.session"
 
 async def main():
 	print(f"Importing sessions from {sqlite_file_path} to {mongodb_dbname} database...")
-	db = pymongo.MongoClient(mongodb_uri)[mongodb_dbname]
+	db = AsyncClient(mongodb_uri)[mongodb_dbname]
 	conn = await aiosqlite.connect(sqlite_file_path)
 	cur = await conn.cursor()
 	await cur.execute("select * from sessions")
@@ -22,7 +22,7 @@ async def main():
 		for col in cols:
 			data[col] = row[i]
 			i = i+1
-		db.session.insert_one(data)
+		await db.session.insert_one(data)
 		count = count+1
 
 	await cur.execute("select * from peers")
@@ -36,7 +36,7 @@ async def main():
 				col = "_id"
 			data[col] = row[i]
 			i = i+1
-		db.peers.insert_one(data)
+		await db.peers.insert_one(data)
 	print("Done")
 	await conn.close()
 

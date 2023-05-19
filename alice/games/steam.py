@@ -19,7 +19,7 @@ async def get_free_steam_games(client):
 	games = soup.find_all("a", class_="search_result_row")
 	for game in games:
 		game_name: str = await get_game_name(game)
-		all_games = db.find_one({'name': 'steam'})['game_name']
+		all_games = (await db.find_one({'name': 'steam'}))['game_name']
 		if game_name in all_games:
 			continue
 		game_url: str = await get_game_url(game)
@@ -55,7 +55,7 @@ async def get_free_steam_games(client):
 			]
 		)
 		await client.send_photo(chat_id=GAME_CHAT, photo=image_url, caption=text, reply_markup=button)
-		db.update_one({'name': 'steam'},{"$push": {'game_name': game_name}})
+		await db.update_one({'name': 'steam'},{"$push": {'game_name': game_name}})
 
 async def get_game_image(game):
 	"""

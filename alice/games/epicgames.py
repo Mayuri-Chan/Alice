@@ -34,7 +34,7 @@ async def get_free_epic_games(client):
 	for game in response.json()["data"]["Catalog"]["searchStore"]["elements"]:
 		game_name = game["title"]
 		game_id = game["id"]
-		all_games = db.find_one({'name': 'epicgames'})['game_id']
+		all_games = (await db.find_one({'name': 'epicgames'}))['game_id']
 		if game_id in all_games:
 			continue
 		final_price = game["price"]["totalPrice"]["originalPrice"] - game["price"]["totalPrice"]["discount"]
@@ -78,7 +78,7 @@ async def get_free_epic_games(client):
 						game_url = f"https://www.epicgames.com/en-US/p/{page_slug}"
 						break
 			datas.append({'game_name': game_name, 'original_price': original_price, 'offer_type': offer_type, 'desc': desc, 'game_url': game_url})
-			db.update_one({'name': 'epicgames'},{"$push": {'game_id': game_id}})
+			await db.update_one({'name': 'epicgames'},{"$push": {'game_id': game_id}})
 		i = i+1
 
 	if len(datas) == 0:

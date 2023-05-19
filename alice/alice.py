@@ -1,4 +1,3 @@
-import pymongo
 from alice import API_ID, API_HASH, AUTO_BACKUP, BOT_TOKEN, SESSION_NAME, WORKERS, init_help
 from alice.games.epicgames import get_free_epic_games
 from alice.games.gog import get_free_gog_games
@@ -8,6 +7,7 @@ from alice.utils.backup import backup
 from apscheduler import RunState
 from apscheduler.schedulers.async_ import AsyncScheduler
 from apscheduler.triggers.interval import IntervalTrigger
+from async_pymongo import AsyncClient
 from pyrogram import Client, raw
 
 class Alice(Client):
@@ -36,8 +36,8 @@ class Alice(Client):
 			await self.scheduler.start_in_background()
 
 	async def freegames(self):
-		if 'freegames' not in self.db.list_collection_names():
-			self.db.freegames.insert(
+		if 'freegames' not in await self.db.list_collection_names():
+			await self.db.freegames.insert(
 				{'name': 'epicgames', 'game_id': []},
 				{'name': 'gog', 'game_name': []},
 				{'name': 'steam', 'game_name': []}
@@ -47,7 +47,7 @@ class Alice(Client):
 		await get_free_steam_games(self)
 
 	async def start(self):
-		self.db = pymongo.MongoClient(DATABASE_URL)['alice']
+		self.db = AsyncClient(DATABASE_URL)['alice']
 		await super().start()
 		await self.catch_up()
 		await self.start_scheduler()
@@ -58,7 +58,7 @@ class Alice(Client):
 		db = self.db['bot_settings']
 		state = await self.invoke(raw.functions.updates.GetState())
 		value = {'pts': state.pts, 'qts': state.qts, 'date': state.date}
-		db.update_one({'name': 'state'}, {"$set": {'value': value}})
+		await db.update_one({'name': 'state'}, {"$set": {'value': value}})
 		await super().stop()
 		print("---[Bye]---")
 		print("---[Thankyou for using my bot...]---")
@@ -67,11 +67,11 @@ class Alice(Client):
 		print("---[Recovering gaps...]---")
 		while(True):
 			db = self.db['bot_settings']
-			state = db.find_one({'name': 'state'})
+			state = await db.find_one({'name': 'state'})
 			if not state:
 				state = await self.invoke(raw.functions.updates.GetState())
 				value = {'pts': state.pts, 'qts': state.qts, 'date': state.date}
-				db.insert_one({'name': 'state', 'value': value})
+				await db.insert_one({'name': 'state', 'value': value})
 				break
 			value = state['value']
 			diff = await self.invoke(
@@ -83,11 +83,11 @@ class Alice(Client):
 				)
 			if isinstance(diff, raw.types.updates.DifferenceEmpty):
 				new_value = {'pts': value['pts'], 'qts': value['qts'], 'date': diff.date}
-				db.update_one({'name': 'state'}, {"$set": {'value': value}})
+				await db.update_one({'name': 'state'}, {"$set": {'value': value}})
 				break
 			elif isinstance(diff, raw.types.updates.DifferenceTooLong):
 				new_value = {'pts': diff.pts, 'qts': value['qts'], 'date': value['date']}
-				db.update_one({'name': 'state'}, {"$set": {'value': value}})
+				await db.update_one({'name': 'state'}, {"$set": {'value': value}})
 				continue
 			users = {u.id: u for u in diff.users}
 			chats = {c.id: c for c in diff.chats}
