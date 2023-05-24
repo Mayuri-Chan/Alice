@@ -1,6 +1,5 @@
 import asyncio
 
-from alice import PREFIX
 from pyrogram import enums, filters
 from pyrogram.errors import FloodWait
 
