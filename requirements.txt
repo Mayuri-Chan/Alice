@@ -1,5 +1,0 @@
-async_pymongo==0.1.2
-pyrofork==2.1.8
-git+https://github.com/agronholm/apscheduler@master
-requests==2.30.0
-tgcrypto==1.2.5
