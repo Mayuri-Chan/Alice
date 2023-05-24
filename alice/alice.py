@@ -13,21 +13,23 @@ from pyrogram import Client, raw
 class Alice(Client):
 	def __init__(self):
 		name = self.__class__.__name__.lower()
+		conn = AsyncClient(DATABASE_URL)
 		super().__init__(
-			name,
+			SESSION_NAME,
 			api_id=API_ID,
 			api_hash=API_HASH,
 			bot_token=BOT_TOKEN,
-			mongodb=dict(uri=DATABASE_URL, db_name=SESSION_NAME),
+			mongodb=dict(connection=conn),
 			workers=WORKERS,
 			plugins=dict(
 				root=f"{name}.plugins"
 			),
 			sleep_threshold=180
 		)
+		self.db = conn['alice']
+		self.scheduler = AsyncScheduler()
 
 	async def start_scheduler(self):
-		self.scheduler = AsyncScheduler()
 		await self.scheduler.__aenter__()
 		if self.scheduler.state == RunState.stopped:
 			if AUTO_BACKUP:
@@ -47,7 +49,6 @@ class Alice(Client):
 		await get_free_steam_games(self)
 
 	async def start(self):
-		self.db = AsyncClient(DATABASE_URL)['alice']
 		await super().start()
 		await self.catch_up()
 		await self.start_scheduler()
