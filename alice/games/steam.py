@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 from pyrogram import utils
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0"
+UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0"
 STEAM_URL = "https://store.steampowered.com/search/?maxprice=free&specials=1"
 
 async def get_free_steam_games(client):

@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from pyrogram import utils
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0"
+UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0"
 
 def get_game_name(banner_title_text: str) -> str:
 	"""
