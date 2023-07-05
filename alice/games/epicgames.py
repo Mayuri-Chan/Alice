@@ -1,3 +1,4 @@
+import httpx
 import os
 import time
 from alice import GAME_CHAT
@@ -6,9 +7,6 @@ from dateutil.parser import parse as parse_time
 from pathlib import Path
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 from typing import Dict
-
-import requests
-from requests.utils import requote_uri
 
 # Epic's backend API URL for the free games promotion
 EPIC_API: str = "https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions"
@@ -22,7 +20,8 @@ PARAMS: Dict[str, str] = {
 
 async def get_free_epic_games(client):
 	db = client.db['freegames']
-	response = requests.get(EPIC_API, params=PARAMS)
+	requests = httpx.AsyncClient(http2=True)
+	response = await requests.get(EPIC_API, params=PARAMS)
 
 	imgs = []
 	datas = []
@@ -146,5 +145,6 @@ async def get_free_epic_games(client):
 					media.append(InputMediaPhoto(media=img))
 				i = i+1
 			await client.send_media_group(chat_id=GAME_CHAT, media=media)
+	await requests.aclose()
 	if diff:
 		return await get_free_epic_games(client)

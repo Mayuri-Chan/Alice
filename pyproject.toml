@@ -16,6 +16,7 @@ apscheduler = {git = "https://github.com/agronholm/apscheduler.git", rev = "mast
 pyrofork = "2.2.5"
 requests = "2.31.0"
 python-dotenv = "^1.0.0"
+httpx = {extras = ["http2"], version = "^0.24.1"}
 
 
 [build-system]
