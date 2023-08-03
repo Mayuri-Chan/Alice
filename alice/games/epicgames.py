@@ -30,6 +30,7 @@ async def get_free_epic_games(client):
 	diff = False
 	# Find the free games in the response
 	i = 1
+	game_url = None
 	for game in response.json()["data"]["Catalog"]["searchStore"]["elements"]:
 		game_name = game["title"]
 		game_id = game["id"]
@@ -76,6 +77,12 @@ async def get_free_epic_games(client):
 						page_slug = offer["pageSlug"]
 						game_url = f"https://www.epicgames.com/en-US/p/{page_slug}"
 						break
+				if not game_url:
+					for offer in game["catalogNs"]["mappings"]:
+						if offer["pageSlug"]:
+							page_slug = offer["pageSlug"]
+							game_url = f"https://www.epicgames.com/en-US/p/{page_slug}"
+							break
 			datas.append({'game_name': game_name, 'original_price': original_price, 'offer_type': offer_type, 'desc': desc, 'game_url': game_url})
 			await db.update_one({'name': 'epicgames'},{"$push": {'game_id': game_id}})
 		i = i+1
