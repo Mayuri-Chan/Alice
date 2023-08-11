@@ -1,7 +1,7 @@
 from alice import API_ID, API_HASH, AUTO_BACKUP, BOT_TOKEN, SESSION_NAME, WORKERS, init_help
-from alice.games.epicgames import get_free_epic_games
-from alice.games.gog import get_free_gog_games
-from alice.games.steam import get_free_steam_games
+from alice.utils.games.epicgames import get_free_epic_games
+from alice.utils.games.gog import get_free_gog_games
+from alice.utils.games.steam import get_free_steam_games
 from alice.plugins import list_all_plugins
 from alice.utils.backup import backup
 from apscheduler import RunState
