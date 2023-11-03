@@ -15,7 +15,7 @@ tgcrypto = "^1.2.5"
 apscheduler = {git = "https://github.com/agronholm/apscheduler.git", rev = "master"}
 pyrofork = "2.3.8.post3"
 python-dotenv = "^1.0.0"
-httpx = {extras = ["http2"], version = "^0.25.0"}
+httpx = {extras = ["http2"], version = "^0.25.1"}
 
 
 [build-system]
