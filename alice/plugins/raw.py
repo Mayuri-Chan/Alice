@@ -1,5 +1,5 @@
 from alice.alice import Alice
-from pyrogram import raw
+from pyrofork import raw
 
 @Alice.on_raw_update()
 async def _raw(c,u,_,__):

@@ -1,7 +1,7 @@
 import asyncio
 
-from pyrogram import enums, filters
-from pyrogram.errors import FloodWait
+from pyrofork import enums, filters
+from pyrofork.errors import FloodWait
 
 async def admin_check(_, c, m):
 	if m.sender_chat:

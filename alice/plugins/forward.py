@@ -2,8 +2,8 @@ import os
 
 from alice.alice import Alice
 from alice.utils.string import build_keyboard, parse_button
-from pyrogram import enums, filters
-from pyrogram.types import InlineKeyboardMarkup
+from pyrofork import enums, filters
+from pyrofork.types import InlineKeyboardMarkup
 
 @Alice.on_message(filters.group & filters.command("settopics"))
 async def set_topics(c,m):

@@ -8,7 +8,7 @@ from apscheduler import RunState
 from apscheduler.schedulers.async_ import AsyncScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from async_pymongo import AsyncClient
-from pyrogram import Client, raw
+from pyrofork import Client, raw
 
 class Alice(Client):
 	def __init__(self):

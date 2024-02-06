@@ -3,8 +3,8 @@ import os
 from alice.alice import Alice
 from alice.plugins.forward import forward_m
 from alice.utils.string import build_keyboard, parse_button
-from pyrogram import enums, filters
-from pyrogram.types import InlineKeyboardMarkup
+from pyrofork import enums, filters
+from pyrofork.types import InlineKeyboardMarkup
 
 @Alice.on_message(filters.channel, group=1)
 async def channel_watcher(c,m):
