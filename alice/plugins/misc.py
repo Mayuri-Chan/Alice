@@ -1,5 +1,5 @@
 from alice.alice import Alice
-from pyrogram import filters
+from pyrofork import filters
 
 @Alice.on_message(filters.private & filters.command("start"))
 async def preview(c,m):

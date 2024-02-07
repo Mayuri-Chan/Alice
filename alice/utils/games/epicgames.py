@@ -5,7 +5,7 @@ from alice import GAME_CHAT
 from dateutil import tz
 from dateutil.parser import parse as parse_time
 from pathlib import Path
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
+from pyrofork.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 from typing import Dict
 
 # Epic's backend API URL for the free games promotion
